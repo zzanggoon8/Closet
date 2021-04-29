@@ -1,0 +1,108 @@
+// 그레들 프로젝트를 스프링 부트 프로젝트로 변경하기
+
+// 1. buildscript 선언
+// Gradle에서 제공 되는 빌드 기능 이외의 직접 만든 Plugin 기능이나
+// 외부 기능(외부 라이브러리)을 사용하고자 한다면 추가로 정의
+buildscript {
+    // ext : build.gradle에서 사용하는 전역변수를 설정하겠다.
+    // springBootVersion 전역변수를 생성하고 그 값을 "2.1.7.RELEASE"로 하겠다.
+    ext {
+        springBootVersion = "2.1.7.RELEASE"
+//        dependencyManagementversion = "1.0.11.RELEASE"
+    }
+    // repositories : 각종 의존성(라이브러리)들을 어떤 원격 저장소에 받을지를 정한다.
+    repositories {
+        // mavenCentral : 이전부터 많이 사용하는 저장소이지만, 본인이 만든 라이브러리를 업로드하기 위해서는 많은 과정과 설정이 필요함.
+        mavenCentral()
+        // 기존에서 'jcenter' 추가
+        jcenter()
+        // 기본적으로 mavenCentral을 많이 사용하지만 최근에는 라이브러리 업로드 난이도 때문에 jcenter많이 사용함.
+        // jcenter 라이브러리를 업로드하면 mavenCentral에도 업로드 될 수 있도록 자동화를 할 수 있다.
+        // mavenCentral과 jcenter 둘 다 설정해두기 !!!
+    }
+    // dependecies : 프로젝트 개발에 필요한 의존성들을 선언하는 곳.
+    dependencies {
+
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+// 2. plugin 적용
+// 앞서 선언한 플로그인 의존성들을 적용할 것인지 결정하는 코드
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+// 스트링 부트의 의존성들을 관리해주는 플러그인이라 꼭 추가해야됨.
+apply plugin: 'io.spring.dependency-management'
+
+
+// 가장 기본 세팅되어 있는 것들
+//plugins {
+//    id 'java'
+//}
+
+group 'com.ssu.project'
+version '1.0.4-SNAPSHOT-'
+sourceCompatibility = 1.8
+
+// repositories : 각종 의존성(라이브러리)들을 어떤 원격 저장소에 받을지를 정한다.
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+// dependecies : 프로젝트 개발에 필요한 의존성들을 선언하는 곳.
+dependencies {
+
+    // web_compile과 test_testCompile 추가
+    compile('org.springframework.boot:spring-boot-starter-web')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+
+
+    // spring-boot-starter-data-jpa
+    // 스프링 부트용 Spring Data JPA 추상화 라이브러리
+    // 스프링 부트 버전에 맞춰 자동으로 JPA 관련 라이브러리들의 버전을 관리 해줌.
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // lombok compile 추가
+    // 자바를 개발할 때 자주 사용하는 코드
+    // 'Getter', 'Setter', '기본생성자', 'toString' 어노테이션 자동생성.
+    compile("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
+
+    // configuration
+    // thymeleaf
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
+
+    // security
+    compile("org.springframework.boot:spring-boot-starter-security")
+    testCompile("org.springframework.security:spring-security-test")
+    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
+
+    // h2
+    compile('com.h2database:h2')
+
+    // 스프링 시큐리티 설정(소셜미디어 로그인 구현 oauth2)
+    /*
+        소셜 로그인 등 클라이언트 입장에서 소셜 기능 구현시 필요한 의존성임.
+        spring-security-oauth2-client와 spring-security-oauth2-jose를
+        기본으로 관리해줌.
+     */
+//    compile('org.springframework.boot:spring-boot-starter-oauth2-client')
+
+    // validator
+    compile("org.springframework.boot:spring-boot-starter-validation")
+
+    // mail
+    compile("org.springframework.boot:spring-boot-starter-mail")
+
+    // gson
+    compile("com.google.code.gson:gson")
+    // json
+    compile("com.googlecode.json-simple:json-simple:1.1.1")
+
+    // Error creating bean with name 'entityManagerFactory' 에러 해결
+
+}
