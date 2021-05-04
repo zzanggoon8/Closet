@@ -16,38 +16,35 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class LikeService {
-
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
     public boolean addLike(Member member, Long itemId) {
-        if (member == null){
+        if (member == null) {
             throw new UsernameNotFoundException("wrong user");
         }
 
         Item item = itemRepository.findById(itemId).orElse(null);
 
-        // itemId의 유효성 판별
-        if(item == null){
+        if (item == null) {
             throw new IllegalArgumentException("wrong item info!");
         }
 
-        // member는 detach 상태 -> Repo를 통해 Select문으로 한 번 조회해야 한다.
-        member = memberRepository.getOne(member.getId()); // detach -> persist 상태로 변환된다.
+        member = memberRepository.getOne(member.getId());
         List<Item> likeList = member.getLikes();
 
-        if(likeList.contains(item)){
+        if (likeList.contains(item)) {
             likeList.remove(item);
             return false;
         }
 
         likeList.add(item);
+
         return true;
     }
 
     public List<Item> getLikeList(Member member) {
          return memberRepository.findByEmail(member.getEmail()).getLikes();
     }
-
 }

@@ -31,13 +31,20 @@ public class MemberService implements UserDetailsService {
 //    private final PasswordEncoder passwordEncoder;
 
 
-    // 회원가입
+    /**
+     * 회원가입(Sign Up)
+     * @param requestDto
+     * @return
+     */
     @Transactional
     public  Long save(MemberSignUpRequestDto requestDto) {
         return memberRepository.save(requestDto.toEntity()).getId();
     }
 
-    // 전체조회
+    /**
+     * 전체조회(
+     * @return
+     */
     @Transactional(readOnly = true)
     public List <MemberListResponseDto> findAllDesc() {
         return memberRepository.findAllDesc().stream()

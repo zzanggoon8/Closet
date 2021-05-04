@@ -19,15 +19,13 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class CartIndexController {
-
     private final OrderService orderService;
 
     @PostMapping("/cart/list")
-    public String addCart(@RequestParam("item_id") String[] itemId, @CurrentUser Member member, Model model) {
-
-        // itemId parameter를 Long type으로 변환한다.
-        // ["20", "30"] -> [20L, 30L]
-        Long[] idArr = Arrays.stream(itemId).map(Long::parseLong).toArray(Long[]::new);
+    public String addCart(@RequestParam("item_id") String[] itemId,
+                          @CurrentUser Member member, Model model) {
+        Long[] idArr = Arrays.stream(itemId)
+                .map(Long::parseLong).toArray(Long[]::new);
         List<Long> itemIdList = List.of(idArr);
 
         if (member == null) {
@@ -35,12 +33,12 @@ public class CartIndexController {
             return "redirect:/";
         }
         orderService.addCart(member, itemIdList);
+
         return cartList(member, model);
     }
 
     @GetMapping("/cart/list")
     public String cartList(@CurrentUser Member member, Model model) {
-        // view page 구현
         try {
             List<OrderItem> cartList = orderService.getCart(member);
             model.addAttribute("cartList", cartList);
@@ -49,15 +47,13 @@ public class CartIndexController {
         } catch (IllegalArgumentException e) {
             model.addAttribute("error_message", e.getMessage());
         }
-
         return "/view/cart";
     }
 
     @GetMapping("/cart/minus")
     public String cartMinus(@RequestParam("id") String itemId, @CurrentUser Member member, Model model){
-        // cart 아이템 삭제
-
         Long deleteItemId = Long.parseLong(itemId);
+
         orderService.minusCart(member, deleteItemId);
 
         return cartList(member, model);

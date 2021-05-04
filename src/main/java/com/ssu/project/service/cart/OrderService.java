@@ -18,14 +18,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderService {
-
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
     private final OrderItemRepository orderItemRepository;
 
     @Transactional
-    public void addCart(Member member, List<Long> itemIdList){
+    public void addCart(Member member, List<Long> itemIdList) {
         member = memberRepository.getOne(member.getId());
 
         Orders orders = orderRepository.findByMemberAndOrderStatus(member, OrderStatus.CART);
@@ -39,7 +38,6 @@ public class OrderService {
         }
 
         final Orders tmpOrders = orders;
-        // OrderItem 등록하기
         List<Item> itemList = itemRepository.findAllById(itemIdList);
         List<OrderItem> orderItemList = itemList.stream().map(
                 item -> {
@@ -55,30 +53,32 @@ public class OrderService {
 
         orders = orderRepository.getOne(orders.getId());
 
-        if(orders.getOrderItems() == null){
+        if (orders.getOrderItems() == null) {
             orders.setOrderItems(new ArrayList<>());
         }
-
         orders.getOrderItems().addAll(orderItemList);
     }
 
 
-    public List<OrderItem> getCart(Member member){
-        // 장바구니 목록 가져오기
+    public List<OrderItem> getCart(Member member) {
         Orders cartOrder = orderRepository.findByMemberAndOrderStatus(member, OrderStatus.CART);
 
-        if(cartOrder == null){
+        if (cartOrder == null) {
             throw new IllegalArgumentException("empty.cart");
         }
+
         log.info("get cart list complete.");
 
         return cartOrder.getOrderItems();
-
     }
 
+    /**
+     * 장바구니 목록 삭제
+     * @param member
+     * @param deleteItemId
+     */
     @Transactional
-    public void minusCart(Member member, Long deleteItemId){
-        // 장바구니 목록 삭제하기
+    public void minusCart(Member member, Long deleteItemId) {
         Orders orders = orderRepository.findByMemberAndOrderStatus(member, OrderStatus.CART);
         List<OrderItem> orderItemList = orders.getOrderItems();
 
@@ -92,9 +92,12 @@ public class OrderService {
 
     }
 
+    /**
+     * 장바구니에 담긴 Item 객체의 총 가격 계산
+     * @param list
+     * @return
+     */
     public int getTotalPrice(List<OrderItem> list){
-        // 장바구니에 담긴 Item 객체들의 총 가격을 계산
-//        return list.stream().mapToInt(OrderItem::getOrderPrice).sum();
         return list.stream().mapToInt(orderItem -> orderItem.getOrderPrice()).sum();
     }
 }

@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MemberListResponseDto {
-    // 전체조회
     private Long id;
     private String email;
     private LocalDateTime modifiedDate;

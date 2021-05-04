@@ -12,27 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class MemberSignUpService implements Validator {
-
     private MemberRepository memberRepository;
 
-    // * Validator -> original Spring Framework interface
-    // supports, validate를 override해줘야 함.
-
-    @Override
-    public boolean supports(Class<?> clazz) {
+    @Override public boolean supports(Class<?> clazz) {
         return clazz.isAssignableFrom(MemberSignUpRequestDto.class);
-        // paramerter가 SignUpForm의 class type을 소화할 수 있는지 검증
     }
 
-    /*
-    SignUpForm의 유효성 검사
-    default : SignUpForm에 선언한 Annotation 내용
-              @NotBlank, @Length, @Pattern 등의 annotation을 검사
-    +) validate() method run(annotation으로 진행할 수 없는 추가적인 검사)
-       DB를 거쳐야 하는 검사인 경우 validate()를 활용한다.
-     */
-    @Override
-    public void validate(Object target, Errors errors) {
+    @Override public void validate(Object target, Errors errors) {
 //        MemberSignUpRequestDto signUpRequestDto = (MemberSignUpRequestDto) target;
 //
 //        if(memberRepository.existsByEmail(signUpRequestDto.getEmail())) {

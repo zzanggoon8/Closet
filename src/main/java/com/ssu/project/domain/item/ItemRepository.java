@@ -12,21 +12,18 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository <Item, Long> {
-
     @Query("SELECT i FROM Item i")
     List<Item> findItem(Pageable pageable);
 
     @Query("SELECT i FROM Item i WHERE i.parentCategory IN (SELECT pc.id FROM ParentCategory pc WHERE pc.name = ?1)")
     List<Item> findItemByParentCategory(String category, Pageable pageable);
 
-    // 신발과 스니커즈 & 가방과 여성가방
     @Query("SELECT i FROM Item i WHERE i.parentCategory IN (SELECT pc.id FROM ParentCategory pc WHERE pc.name = ?1 or pc.name = ?2)")
     List<Item> findItemByParentCategory(String category_1, String category_2, Pageable pageable);
 
     @Query(value = "SELECT count(i) FROM Item i WHERE i.parentCategory IN (SELECT pc.id FROM ParentCategory pc WHERE pc.name = ?1)")
     Long countItemByParentCategory(String category);
 
-    // 신발과 스니커즈 & 가방과 여성가방
     @Query(value = "SELECT count(i) FROM Item i WHERE i.parentCategory IN (SELECT pc.id FROM ParentCategory pc WHERE pc.name = ?1 or pc.name = ?2)")
     Long countItemByParentCategory(String category_1, String category_2);
 
@@ -40,5 +37,4 @@ public interface ItemRepository extends JpaRepository <Item, Long> {
     List<Item> findByBrandKeyword(@Param("keyword") String keyword);
 
     List<Item> findAllByParentCategoryAndChildCategory(ParentCategory parent, ChildCategory child);
-
 }

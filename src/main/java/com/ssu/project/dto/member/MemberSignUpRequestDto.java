@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 public class MemberSignUpRequestDto {
-
     @Email
     @NotBlank @Length(min = 5, max = 40)
     @NotNull(message = "이메일은 Null 일 수 없습니다!")
@@ -27,14 +26,12 @@ public class MemberSignUpRequestDto {
     @NotNull(message = "비밀번호는 Null 일 수 없습니다!")
     private String password;
 
-    private MemberStatus type;
-
-
-    private String agreePolicy;
-
     @Enumerated
     private Address address;
+
 //    private String emailVerified;
+    private MemberStatus type;
+    private String agreePolicy;
 
     @Builder
     public MemberSignUpRequestDto(String email, String password, MemberStatus type, Address address) {
@@ -43,8 +40,6 @@ public class MemberSignUpRequestDto {
         this.type = type;
         this.address = address;
     }
-
-
 
     public Member toEntity() {
         return Member.builder()
@@ -55,14 +50,3 @@ public class MemberSignUpRequestDto {
                 .build();
     }
 }
-
-/*
-    signup.html의 form 내용을 SignUpForm DTO로 포장 --> Validator 객체에 전달
-    즉, 유효성 검증을 위한 DTO
-    따라서 physical DB에 들어가지 않음
-
-    *Lombok @Data annotation => data 역할을 할 class에게 주어짐
-    자동 getter, setter 생성
-
-    @Length : 문자열 길이, @NotBlank : null 과 "" 과 " " 모두 허용하지 않음.
-*/

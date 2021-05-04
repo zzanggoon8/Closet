@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @RequiredArgsConstructor
 public class EmailIndexController {
-
     private final MemberEmailService memberEmailService;
 
     @GetMapping("/check-email-token")
@@ -35,7 +34,7 @@ public class EmailIndexController {
         }
 
         model.addAttribute("email", email);
+
         return "/view/check-email-result";
     }
-
 }

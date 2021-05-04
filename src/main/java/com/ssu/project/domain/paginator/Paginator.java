@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Paginator {
-
-    // 생성
     private Integer pagesPerBlock;
     private Integer postsPerPage;
     private Long totalPostCount;
@@ -51,6 +49,7 @@ public class Paginator {
         this.totalPostCount = totalPostCount;
         this.setTotalLastPageNum();
     }
+
 
     private void setTotalLastPageNum() {
         // 총 게시글 수를 기준으로 한 마지막 페이지 번호 계산

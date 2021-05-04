@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MemberUpdateRequestDto {
-
     private String email;
 
     @Builder

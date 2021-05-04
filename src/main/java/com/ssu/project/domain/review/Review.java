@@ -13,15 +13,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Review {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String title;
-    private String content;
-    private String img;
-
-    private Long parentId;
 
     @ManyToOne
     private Item item;
@@ -32,8 +25,10 @@ public class Review {
     @ManyToOne
     private Orders order;
 
+    private String title;
+    private String content;
+    private String img;
+    private Long parentId;
     private String createDate;
-
     private String updateDate;
-
 }

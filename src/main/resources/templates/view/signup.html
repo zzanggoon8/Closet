@@ -15,20 +15,16 @@
     <link href="@{/css/user/signup.css}" rel="stylesheet">
 </th:block>
 
-
 <div layout:fragment="content" class="container" style="background-color: white;">
     <div>
         <h2 id="pageLogo">Sign Up</h2>
         <small id="pageInfo">Please submit this form.</small>
     </div>
-
     <div class="row g-10" style="margin-bottom: 10px;" id="signUpDiv">
         <hr class="col-12 my-4">
         <p class="mb-3 col-12" id="infoLabel">기본 정보</p>
-        <!-- signUpForm -->
         <form class="needs-validation" th:object="${memberSignUpRequestDto}" th:action="@{/signup}" method="post"
               name="memberSignUpRequestDto" novalidate>
-
             <div class="row g-3">
                 <div class="col-9">
                     <label for="email" class="form-label">Email *</label>
@@ -41,7 +37,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-9" id="passwordDiv">
                     <label for="password" class="form-label">Password *</label>
                     <div class="input-group">
@@ -51,8 +46,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="col-9" id="checkboxDiv">
                     <div class="form-check" id="policyDiv">
                         <input type="checkbox" th:field="*{agreePolicy}" th:value="true" class="form-check-input"
@@ -64,14 +57,10 @@
                         <div class="invalid-feedback">
                             <small>Please agree the policy.</small>
                         </div>
-
                     </div>
                 </div>
                 <hr class="col-12 my-4">
-
-
                 <p class="mb-3 col-12" id="infoLabel2">배송지 정보</p>
-
                 <div class="col-2">
                     <label for="zipcode" class="form-label">postal code</label>
                     <div class="input-group">
@@ -99,11 +88,7 @@
             </div>
         </form>
     </div>
-
-
     <footer class="my-5 pt-5"></footer>
 </div>
 </div>
-
-
 </html>

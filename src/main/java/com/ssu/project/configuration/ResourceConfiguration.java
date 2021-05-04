@@ -8,9 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class ResourceConfiguration implements WebMvcConfigurer {
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(
                 "/images/**",
                 "/css/**",

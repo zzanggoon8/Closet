@@ -11,8 +11,7 @@ import java.util.List;
 public class MemberUser extends User {
     private Member member;
 
-    // constructor
-    public MemberUser(Member member){
+    public MemberUser(Member member) {
         super(member.getEmail(), member.getPassword(), List.of(member.getType()));
         this.member = member;
     }

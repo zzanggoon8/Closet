@@ -9,7 +9,6 @@
         <h2 id="pageLogo">Login</h2>
         <br/>
     </div>
-
     <div class="row justify-content-center">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             <p>Not equal email or password.</p>
@@ -18,9 +17,7 @@
             </p>
         </div>
     </div>
-
     <div class="row g-10 justify-content-center">
-
         <form class="needs-validation" th:action="@{/postLogin}" method="post" name="loginForm" novalidate>
             <div class="row g-3">
                 <div class="col-12">
@@ -33,9 +30,7 @@
                     </xs>
                 </div>
             </div>
-
             <br/>
-
             <div class="row g-3">
                 <div class="col-12">
                     <label for="password" class="form-label">Password</label>
@@ -48,21 +43,48 @@
                     </xs>
                 </div>
             </div>
-
             <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="rememberMe"
                        name="remember-me" checked/>
                 <label class="form-check-label" for="rememberMe" aria-describedby="rememberMeHelp">Keep Login
                     Status</label>
             </div>
-
             <hr class="col-12 my-4">
             <button class="w-50 btn btn-dark btn-lg" type="submit">Login</button>
+            <!-- google -->
+            <div class="col-md-10">
+                <!-- th:if="${not #strings.isEmpty(userName)}" -->
+                <div>
+                    <img style="width:45px; height:45px" src="/image/unnamed.png"
+                         class="rounded-circle img-thumbnail img-responsive">
+                    <!-- th:text="${userName}" -->
+                    <span id="login-user">사용자</span> 님, 안녕하세요.
+                    <a href="/logout" class="btn btn-sm btn-info active" role="button">Logout</a>
+                </div>
+
+                <!--  th:if="${#strings.isEmpty(userName)}" -->
+                <div>
+                    <!-- 스프링 시큐리티에서 기본 제공하는 URL - 별도 컨트롤러 작성 필요 없음 -->
+                    <a href="/oauth2/authorization/google" class="btn btn-sm btn-success active" role="button">Google Login</a>
+                </div>
+                <div>
+                    <!-- 스프링 시큐리티에서 기본 제공하는 URL - 별도 컨트롤러 작성 필요 없음 -->
+                    <a th:href="${naverUri}" class="btn btn-sm btn-success active" id="naverLogin" role="button">Naver Login</a>
+                </div>
+            </div>
         </form>
     </div>
+    <script>
+        document.getElementById("naverLogin").onclick = function(e) {
+            e.preventDefault();
+
+            window.open(this.href, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
+        }
+    </script>
+
     <footer class="my-5 pt-5">
     </footer>
 </div>
-
 </div>
+
 </html>

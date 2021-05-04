@@ -18,7 +18,6 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class LikeIndexController {
-
     private final LikeService likeService;
 
     @GetMapping("/store/like")
@@ -27,36 +26,30 @@ public class LikeIndexController {
 
         boolean result = false;
 
-        // JSON 객체를 만든다.
         JsonObject jsonObject = new JsonObject();
-
-        //사용자의 likes (Member 엔티티의 likes)에 해당 상품을 추가
 
         try {
             result = likeService.addLike(member, itemId);
             // 찜 목록 추가
             if (result) {
                 jsonObject.addProperty("message", "Add like list Complelte!");
-            }
-            // 찜 목록 삭제
-            else {
+            } else {
                 jsonObject.addProperty("message", "Delete from like list.");
             }
             jsonObject.addProperty("status", result);
         } catch (IllegalArgumentException e) {
             jsonObject.addProperty("message", "Wrong access.");
-        } catch (UsernameNotFoundException e) {
+        } catch (UsernameNotFoundException e) {}
 
-        }
         return jsonObject.toString();
     }
 
     @GetMapping("/store/like-list")
     public String likeList(@CurrentUser Member member, Model model) {
-
         List <Item> likeList = likeService.getLikeList(member);
+
         model.addAttribute("likeList", likeList);
+
         return "/view/like-list";
     }
-
 }

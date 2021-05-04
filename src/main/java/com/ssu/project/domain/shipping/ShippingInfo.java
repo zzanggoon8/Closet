@@ -1,4 +1,3 @@
 package com.ssu.project.domain.shipping;
 
-public class ShippingInfo {
-}
+public class ShippingInfo {}

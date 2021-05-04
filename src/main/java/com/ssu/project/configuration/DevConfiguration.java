@@ -16,12 +16,11 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 @Slf4j
 public class DevConfiguration {
-
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
     @PostConstruct
-    public void createTestUser(){
+    public void createTestUser() {
         Member member = Member.builder()
                 .email("test@test.com")
                 .password("1111")

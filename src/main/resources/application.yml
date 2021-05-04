@@ -16,19 +16,10 @@ spring:
       format_sql: true
   profiles:
     active: dev
-#  thymeleaf:
-    ##    cache: false
-    ##    prefix: classpath:/templates
-
+    # 구글 로그인 연동(application-oauth.properties 로딩)
+    include: oauth
 
 logging:
   level:
     org.hibernate.SQL: debug
 
-
-## 실행된 쿼리를 로그로 볼 수 있게 변경
-#spring.jpa.show-sql= true
-## 출력되는 쿼리 로그를 MySql 버전으로 변경
-#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-## 웹 콘솔 옵션 활성화
-#spring.h2.console.enabled=true

@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParentCategory {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 

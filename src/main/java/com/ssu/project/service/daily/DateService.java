@@ -14,8 +14,7 @@ public class DateService {
 
         System.out.println(meridiem);
         String time ="PM";
-        //오전: 00 01 02 03 04 05 06 07 08 09 10 11
-        //오후: 12 13 ,14 15 16 17 18 19 20 21 22 23
+
         switch (meridiem) {
             case "01":
             case "02":
@@ -46,7 +45,9 @@ public class DateService {
                 time = "PM";
                 break;
         }
+
         System.out.println(time);
+
         return time;
     }
 }

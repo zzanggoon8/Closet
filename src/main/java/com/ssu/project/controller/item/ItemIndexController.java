@@ -14,10 +14,7 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class ItemIndexController {
-
     private final ItemService itemService;
-
-
     /**
      * 카테고리 아이템 조회
      * @param itemRequestDto

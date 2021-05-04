@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.io.FileReader;
@@ -30,27 +29,23 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional // 객체가 사용하는 모든 method에 transaction이 적용된다.
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class ItemService {
-
     private final ItemRepository itemRepository;
     private final ParentCategoryRepository parentCategoryRepository;
     private final ChildCategoryRepository childCategoryRepository;
 
     @PostConstruct
     public void initAlbumItems() throws IOException, ParseException {
-
-
         Resource resource = new ClassPathResource("items.json");
+
         JSONParser parser = new JSONParser();
 
         String uri = resource.getFile().toPath().toString();
 
         JSONArray obj = (JSONArray) parser.parse(new FileReader(uri));
-
-
 
         for (int i = 0; i < obj.size(); i++) {
             JSONObject object = (JSONObject) obj.get(i);
@@ -62,42 +57,36 @@ public class ItemService {
             item.setCode((String) object.get("item_code"));
             item.setImg_name((String) object.get("img_name"));
 
-            //parentcategory
             ParentCategory parent = parentCategoryRepository.findByName((String)object.get("big_category"));
-            if(parent == null){
+
+            if (parent == null) {
                 ParentCategory newParent = new ParentCategory();
                 newParent.setName((String) object.get("big_category"));
                 item.setParentCategory(newParent);
-            }
-            else{
+            } else {
                 item.setParentCategory(parent);
             }
 
-            //childcategory
             ChildCategory child = childCategoryRepository.findByname((String) object.get("small_category"));
-            if(child == null){
+            if (child == null) {
                 ChildCategory newChild = new ChildCategory();
                 newChild.setName((String) object.get("small_category"));
                 item.setChildCategory(newChild);
-            }
-            else{
+            } else {
                 item.setChildCategory(child);
             }
 
-
-            // image urls
             JSONArray urlArr = (JSONArray) object.get("detail_img");
-
 
             Iterator<String> iterator1 = urlArr.iterator();
             while (iterator1.hasNext()) {
                 item.getUrls().add(iterator1.next());
             }
 
-            // sizes
             JSONArray sizeArr = (JSONArray) object.get("size");
 
             Iterator<String> iterator2 = sizeArr.iterator();
+
             while (iterator2.hasNext()) {
                 item.getSizes().add(iterator2.next());
             }
@@ -109,19 +98,30 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    // 재우
-    //Get Item by All keyword (name, brand 전체검색)
-    public List<Item> findByAllKeyword(String keyword){
+    /**
+     * 전체검색
+     * @param keyword
+     * @return
+     */
+    public List<Item> findByAllKeyword(String keyword) {
         return itemRepository.findByAllKeyword(keyword);
     }
 
-    //Get Item by Name keyword (name 만 검색)
-    public List<Item> findByNameKeyword(String keyword){
+    /**
+     * name만 검색
+     * @param keyword
+     * @return
+     */
+    public List<Item> findByNameKeyword(String keyword) {
         return itemRepository.findByNameKeyword(keyword);
     }
 
-    //Get Item by Brand keyword (brand 만 검색)
-    public List<Item> findByBrandKeyword(String keyword){
+    /**
+     * brand만 검색
+     * @param keyword
+     * @return
+     */
+    public List<Item> findByBrandKeyword(String keyword) {
         return itemRepository.findByBrandKeyword(keyword);
     }
 
@@ -131,7 +131,7 @@ public class ItemService {
      * @param pageable
      * @return
      */
-    public List <Item> getItemListByCategory(String category, Pageable pageable) {
+    public List<Item> getItemListByCategory(String category, Pageable pageable) {
         if (category.equals("best")) {
             return itemRepository.findItem(pageable);
         } else if (category.indexOf("_") > -1) {
@@ -164,7 +164,9 @@ public class ItemService {
         if (limit == 0) {
             limit = 20;
         }
+
         Sort sortBy = null;
+
         if (sort.equals("price_high")) {
             sortBy = Sort.by(Sort.Direction.DESC, "price");
         } else if (sort.equals("price_low")) {
@@ -175,38 +177,40 @@ public class ItemService {
         return PageRequest.of(page, limit, sortBy);
     }
 
-    public Item findItem(Long id){
-
-//       < 방법 1 > getOne(id) 사용
-//       return itemRepository.getOne(id);
-
-//       < 방법 2 > findById(id) 사용
-//       Optional은 null 방지 클래스
+    /**
+     * 방법 1. getOne(id) 사용
+     * 방법 2. findById(id) 사용
+     * @param id
+     * @return
+     */
+    public Item findItem(Long id) {
         Optional<Item> optional = itemRepository.findById(id);
         return optional.orElseGet(() -> itemRepository.findById(id).get());
     }
 
-    //추천 옷 (아우터, 상의 ,하의 )
+    /**
+     * 추천 옷(Recomend Dress Code)
+     * 아우터(Outer), 상의(Top), 하의(bottom)
+     * @param parent
+     * @param child
+     * @return
+     */
     public Item findRecommendCategory(Long parent, Long child){
         ParentCategory parentCategory = parentCategoryRepository.getOne(parent);
+
         ChildCategory childCategory = childCategoryRepository.getOne(child);
 
-        // 카테고리에 해당하는 아이템들을 받는다.
         List<Item> itemList = itemRepository.findAllByParentCategoryAndChildCategory(parentCategory, childCategory);
 
         Item item = null;
 
         if (itemList.size()>0) {
-            // 이 중 랜덤하게 1개를 선택한다.
             int index = (int)(Math.random() * itemList.size());
+
             item = itemList.get(index);
-            // 아이템의 url들 중, 0번 url을 mainUrl로
+
             item.setMainUrl(item.getUrls().get(0));
         }
-
-
-
         return item;
     }
-
 }

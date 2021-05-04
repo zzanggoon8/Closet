@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Getter
 public class WeatherListResponse {
-
     private Long id;
     private String baseDate;
     private String meridiem;

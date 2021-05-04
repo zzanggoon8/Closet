@@ -9,16 +9,11 @@
 </th:block>
 
 <div layout:fragment="content" class="container" style="background-color: white;">
-
     <br/>
     <div class="py-`5` ml-2" id="pagebox">
-        <div id="catetitle">
-
-        </div>
-
+        <div id="catetitle"></div>
         <th:block th:insert="item_fragements :: item_list(${itemList})"/>
     </div>
-
     <div class="row" th:if="${pageInfo ne null}">
         <div class="col-12">
             <ul class="pagination pagination justify-content-center">
@@ -43,7 +38,5 @@
             </ul>
         </div>
     </div>
-
 </div>
-
 </html>

@@ -23,16 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@ResponseBody
 @RequiredArgsConstructor
 public class CodyIndexController {
-
-
     private final LikeService likeService;
     private final CodyService codyService;
 
     @GetMapping("/cody")
     public String cody(@CurrentUser Member member, Model model) {
-
         model.addAttribute(new CodyForm());
 
         List<Item> likeList = likeService.getLikeList(member);
@@ -42,28 +40,26 @@ public class CodyIndexController {
         List<Item> acc = new ArrayList<>();
         List<Item> shoes = new ArrayList<>();
 
-        for(int i = 0; i<likeList.size(); i++){
-            if(likeList.get(i).getParentCategory().getName().equals("상의")){
+        for (int i = 0; i<likeList.size(); i++) {
+            if (likeList.get(i).getParentCategory().getName().equals("상의")) {
                 top.add(likeList.get(i));
                 System.out.println(likeList.get(i).getParentCategory().getName());
-            }
-            if(likeList.get(i).getParentCategory().getName().equals("아우터")){
+            } if (likeList.get(i).getParentCategory().getName().equals("아우터")) {
                 outer.add(likeList.get(i));
                 System.out.println(likeList.get(i).getParentCategory().getName());
-            }
-            if(likeList.get(i).getParentCategory().getName().equals("바지")){
+            } if (likeList.get(i).getParentCategory().getName().equals("바지")) {
                 bottom.add(likeList.get(i));
                 System.out.println(likeList.get(i).getParentCategory().getName());
-            }
-            if(likeList.get(i).getParentCategory().getName().equals("신발")||likeList.get(i).getParentCategory().getName().equals("스니커즈") ){
+            } if (likeList.get(i).getParentCategory().getName().equals("신발")||likeList.get(i)
+                    .getParentCategory().getName().equals("스니커즈") ) {
                 shoes.add(likeList.get(i));
                 System.out.println(likeList.get(i).getParentCategory().getName());
-            }
-            if(likeList.get(i).getParentCategory().getName().equals("가방")){
+            } if(likeList.get(i).getParentCategory().getName().equals("가방")) {
                 acc.add(likeList.get(i));
                 System.out.println(likeList.get(i).getParentCategory().getName());
             }
         }
+
         model.addAttribute("topList", top);
         model.addAttribute("outerList", outer);
         model.addAttribute("bottomList", bottom);
@@ -72,27 +68,26 @@ public class CodyIndexController {
         model.addAttribute("member", member);
 
         System.out.println("상의--------->" + top);
+
         return "/view/cody";
     }
 
     @PostMapping("/cody")
     public String codySubmit(@CurrentUser Member member, @Valid CodyForm codyForm) {
-
         Cody cody = codyService.createNewCody(member,codyForm);
 
-        return "redirect:/cody"; // root로 redirect
+        return "redirect:/cody";
     }
 
     @GetMapping("/codyList")
     public String codyList(@CurrentUser Member member, Model model) {
-
         model.addAttribute("codyList",codyService.getCodyList(member));
+
         return "/view/codyList";
     }
 
     @GetMapping("/allCodyList")
     public String allCodyList(@CurrentUser Member member,Model model) {
-
         model.addAttribute("codyList",codyService.getAllList());
 
         model.addAttribute("cody_like_status", false);
@@ -103,8 +98,13 @@ public class CodyIndexController {
         return "/view/allCodyList";
     }
 
+    /**
+     * 찜 목록
+     * @param member
+     * @param codyId
+     * @return
+     */
     @GetMapping("/cody/like")
-    @ResponseBody
     public String addCodyLike(@CurrentUser Member member, @RequestParam("id") Long codyId) {
 
         boolean result = false;
@@ -116,17 +116,13 @@ public class CodyIndexController {
             // 찜 목록 추가
             if (result) {
                 jsonObject.addProperty("message", "Add like list Complelte!");
-            }
-            // 찜 목록 삭제
-            else {
+            } else {
                 jsonObject.addProperty("message", "Delete from like list.");
             }
             jsonObject.addProperty("status", result);
         } catch (IllegalArgumentException e) {
             jsonObject.addProperty("message", "Wrong access.");
-        } catch (UsernameNotFoundException e) {
-
-        }
+        } catch (UsernameNotFoundException e) {}
         return jsonObject.toString();
     }
 }

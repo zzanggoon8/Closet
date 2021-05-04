@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Slf4j
 @RequiredArgsConstructor
 public class DetailIndexController {
-
     private final ItemService itemService;
     private final MemberRepository memberRepository;
 
@@ -34,6 +33,7 @@ public class DetailIndexController {
             member = memberRepository.findByEmail(member.getEmail());
             model.addAttribute("like_status", member.getLikes().contains(item));
         }
+
         model.addAttribute("item", item);
         model.addAttribute("currentUser",member);
 //        model.addAttribute("reviewList",reviewList);
@@ -42,5 +42,4 @@ public class DetailIndexController {
 
         return "/view/detail";
     }
-
 }

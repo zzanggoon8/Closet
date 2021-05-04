@@ -10,12 +10,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class Cart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @ManyToOne private Member member;
     private int cartCount;
-
-    @ManyToOne
-    private Member member;
 }

@@ -11,7 +11,7 @@ public interface MemberRepository extends JpaRepository <Member, Long> {
     @Query(value = "SELECT * FROM Member", nativeQuery = true)
     List<Member> findAllDesc();
 
-    public boolean existsByEmail(String email); // email 검색용 method
+    public boolean existsByEmail(String email);
 
     public Member findByEmail(String email);
 

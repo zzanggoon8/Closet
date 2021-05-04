@@ -22,7 +22,7 @@ public class CodyService {
 
     public Cody createNewCody(Member member, CodyForm codyForm) {
 
-        if (codyForm.getTopId()==null){
+        if (codyForm.getTopId()==null) {
             codyForm.setTopId(0L);
         }
 
@@ -37,12 +37,12 @@ public class CodyService {
                 .shoesSize(codyForm.getShoesSize())
                 .build();
 
-        if(codyForm.getOuterId()!=null){
+        if (codyForm.getOuterId()!=null) {
             cody.setOuterId(codyForm.getOuterId());
             cody.setOuterSize(codyForm.getOuterSize());
         }
 
-        if(codyForm.getAccId()!=null){
+        if (codyForm.getAccId()!=null) {
             cody.setAccId(codyForm.getAccId());
             cody.setAccSize(codyForm.getAccSize());
         }
@@ -55,11 +55,13 @@ public class CodyService {
 
     public List<Cody> getCodyList(Member member) {
         List<Cody> codyList = codyRepository.findAllByMember(member);
+
         return codyList;
     }
 
-    public List<Cody> getAllList(){
+    public List<Cody> getAllList() {
         List<Cody> codyList = codyRepository.findAll();
+
         return codyList;
     }
 

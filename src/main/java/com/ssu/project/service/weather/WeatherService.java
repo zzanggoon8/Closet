@@ -38,6 +38,10 @@ public class WeatherService {
     private final WeatherRepository weatherRepository;
 
 
+    /**
+     * Get Weather(), Get Temperature()
+     * Save Temp Date(), save Real Data()
+     */
     @PostConstruct
     @Transactional
     public void Init() {
@@ -51,7 +55,6 @@ public class WeatherService {
             try {
                 JsonParser jp = new JsonParser();
 
-                // 1. get weather
                 String weather_result = callWeatherApi(API_TYPE_WEATHER, region.getRegionWeatherId());
                 JsonObject weather_json = jp.parse(weather_result)
                         .getAsJsonObject()
@@ -62,7 +65,6 @@ public class WeatherService {
                         .get(0)
                         .getAsJsonObject();
 
-                // 2. get temperature
                 String temperature_result = callWeatherApi(API_TYPE_TEMPERATURE, region.getRegionTemperatureId());
                 JsonObject temperature_json = jp.parse(temperature_result)
                         .getAsJsonObject()
@@ -73,7 +75,6 @@ public class WeatherService {
                         .get(0)
                         .getAsJsonObject();
 
-                // 3. save temp data(1,2,3)
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 2; j++) {
                         String wt = "";
@@ -102,11 +103,11 @@ public class WeatherService {
                                 .localWeather(wt)
                                 .temperature(Long.parseLong(temp))
                                 .build();
+
                         weatherRepository.save(weather);
                     }
                 }
 
-                // 4. save real data(4~10)
                 for (int i = 3; i < 11; i++) {
                     for (int j = 0; j < 2; j++) {
                         // set weather key
@@ -125,10 +126,7 @@ public class WeatherService {
                         }
                         meridiem = meridiem.toUpperCase();
 
-                        // set temperature key
                         String temperature_key = "taMax" + i;
-//                        System.out.println(i + " " + j + " " + weather_json.get(weather_key).getAsString());
-//                        System.out.println(i + " " + j + " " + temperature_json.get(temperature_key).getAsLong());
 
                         Weather weather = Weather.builder()
                                 .baseDate(getAddDate(i))
@@ -137,10 +135,11 @@ public class WeatherService {
                                 .localWeather(weather_json.get(weather_key).getAsString())
                                 .temperature(temperature_json.get(temperature_key).getAsLong())
                                 .build();
+
                         weatherRepository.save(weather);
                     }
                 }
-            } catch(Exception e){
+            } catch(Exception e) {
                 e.printStackTrace();
             }
         }
@@ -148,17 +147,22 @@ public class WeatherService {
 
     public String getAddDate(int day) {
         Date date = new Date();
+
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.DATE, day);
         date = c.getTime();
+
         SimpleDateFormat format = new SimpleDateFormat ( "yyyyMMdd");
+
         return format.format(date);
     }
 
     public String getCurrentDate() {
         SimpleDateFormat format = new SimpleDateFormat ( "yyyyMMdd:HHmm");
+
         Date date = new Date();
+
         return format.format(date);
     }
 
@@ -197,7 +201,7 @@ public class WeatherService {
         );
     }
 
-    private String callWeatherApi(int apiType, String regionId) throws Exception{
+    private String callWeatherApi(int apiType, String regionId) throws Exception {
         String api_url = "";
         if (apiType == API_TYPE_WEATHER) {
             // 날씨
@@ -222,20 +226,25 @@ public class WeatherService {
         conn.setRequestProperty("Content-type", "application/json");
         System.out.println("Response code: " + conn.getResponseCode());
         BufferedReader rd;
-        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+
+        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         } else {
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
         }
+
         StringBuilder sb = new StringBuilder();
+
         String line;
+
         while ((line = rd.readLine()) != null) {
             sb.append(line);
         }
+
         rd.close();
         conn.disconnect();
-
         System.out.println(sb.toString());
+
         return sb.toString();
     }
 
@@ -248,7 +257,7 @@ public class WeatherService {
     }
 
     @Transactional
-    public List <WeatherListResponse> findByWeatherCity( String weatherCity) {
+    public List<WeatherListResponse> findByWeatherCity( String weatherCity) {
         return weatherRepository.findByWeatherCityAndBaseDateAndMeridiemOrderByBaseDateDesc(
                 weatherCity, getMeridiem(getCurrentDate()).toUpperCase(),
                 getCurrentDate().split(":")[0], getAddDate(10)
@@ -261,7 +270,7 @@ public class WeatherService {
     public List<Weather> findCurrentLocalWeather(String city){
         return weatherRepository.findByCurrentLocalWeather(city);
     }
-    public List<Weather> findCurrentDateTemperature(String currentdate, String city, String meridien){
+    public List<Weather> findCurrentDateTemperature(String currentdate, String city, String meridien) {
         return weatherRepository.findCurrentDateTemperature(currentdate, city, meridien);
     }
 }

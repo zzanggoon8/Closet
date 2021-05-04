@@ -8,11 +8,7 @@ public class CityNameService {
     private String rename ="";
 
     public String renameCity(String cityName){
-//        if(cityName.equals("서울특별시")){
-//            cityName = "서울";
-//            rename = cityName;
-//        }
-        switch (cityName){
+        switch (cityName) {
             case "서울특별시": rename="서울_인천_경기도";
                 break;
             case "인천광역시": rename="서울_인천_경기도";
@@ -36,16 +32,14 @@ public class CityNameService {
                 break;
             case "전라남도": rename="광주_전라남도";
                 break;
-//전라북도
             case "대전광역시": rename="대전_세종_충청남도";
                 break;
             case "충청남도": rename="대전_세종_충청남도";
                 break;
-//충청북도
-//강원도
             case "제주특별자치도": rename="제주도";
                 break;
         }
+
         return rename;
     }
 }

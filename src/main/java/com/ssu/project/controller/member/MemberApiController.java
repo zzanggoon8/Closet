@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class MemberApiController {
-
     private final MemberService memberService;
 
-    // 회원가입
     @PostMapping("/api/member")
     public Long memberSignUp(@RequestBody MemberSignUpRequestDto requestDto) {
         return memberService.save(requestDto);

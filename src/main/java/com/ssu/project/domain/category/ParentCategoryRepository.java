@@ -5,7 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ParentCategoryRepository extends JpaRepository<ParentCategory, Long> {
-
     public ParentCategory findByName(String name);
-
 }

@@ -9,11 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface CodyRepository extends JpaRepository<Cody, Long> {
-
     public List<Cody> findAllByMember(Member member);
 
     public List<Cody> findAll();
 
     public Optional<Cody> findById(Long id);
-
 }

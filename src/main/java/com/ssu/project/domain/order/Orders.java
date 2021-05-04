@@ -1,6 +1,5 @@
 package com.ssu.project.domain.order;
 
-import ch.qos.logback.core.status.Status;
 import com.ssu.project.domain.delivery.Delivery;
 import com.ssu.project.domain.member.Member;
 import lombok.*;
@@ -17,9 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Orders {
-
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -32,9 +29,8 @@ public class Orders {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Delivery delivery;
 
-    private LocalDateTime orderDate;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    private LocalDateTime orderDate;
 }

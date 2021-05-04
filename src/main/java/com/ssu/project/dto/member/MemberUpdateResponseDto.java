@@ -5,11 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class MemberUpdateResponseDto {
-
-     /*
-        id, email, password
-     */
-
      private Long id;
      private String email;
      private String passoword;

@@ -11,11 +11,9 @@
             <div id="brandname">
                 <h3><b th:text="${item.brand}"></b></h3>
             </div>
-
             <div id="imgbox">
                 <img id="nowimg" th:src="${item.urls.get(0)}">
             </div>
-
             <div id="imgboxs_mini">
                 <div class="imgbox_mini" th:if="${item.urls.size()} >= 2"><img class="mini" id="mini0"
                                                                                th:src="${item.urls.get(0)}"></div>
@@ -35,11 +33,9 @@
                                                                                th:src="${item.urls.get(7)}"></div>
                 <div class="imgbox_mini" th:if="${item.urls.size()} >= 9"><img class="mini" id="mini8"
                                                                                th:src="${item.urls.get(8)}"></div>
-                <div class="imgbox_mini" th:if="${item.urls.size()} >= 10"><img class="mini" id="mini9"
-                                                                                th:src="${item.urls.get(9)}"></div>
+                <div class="imgbox_mini" th:if="${item.urls.size()} >= 10"><img class="mini" id="mini9" th:src="${item.urls.get(9)}"></div>
             </div>
         </div>
-
         <div id="product_info">
             <h4 th:text="${item.name}"/>
             <p th:text="${item.brand}" id="brandinfo"/> / <p th:text="${item.code}" id="codeinfo"/>
@@ -61,7 +57,6 @@
             </div>
             </p>
             <p><h6>Price</h6>₩ <span th:text="${#numbers.formatInteger(item.price, 3, 'COMMA')}"></span></p>
-
             <hr>
             <div id="buyandcartbtn">
                 <button type="button" class="btn btn-light" id="buybtn">Buy Now</button>
@@ -72,22 +67,16 @@
                             class="btn btn-light"
                             th:value="${item.id}">Add Cart</button>
                 </form>
-
                 <button id="like" class="btn btn-light">
                     <i id="like_status" th:class="${like_status} ? 'fas fa-heart':'far fa-heart'"
                        class="far fa-heart"></i>
                     like!
                 </button>
-
                 <button type="button" class="btn btn-light" id="createBtn">Write Review</button>
             </div>
         </div>
-
     </div>
-
     <th:block th:insert="review_fragment :: review_list(${item.getReview()}, ${currentUser})"/>
-
-    <!--like Modal -->
     <div class="modal fade" id="modal" tabindex="-1" role="dialog"
          aria-labelledby="modalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -108,8 +97,6 @@
             </div>
         </div>
     </div>
-
-    <!--delete review Modal -->
     <div class="modal fade" id="delReviewModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -129,8 +116,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Review Modal -->
     <div class="modal fade" id="writeReview" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -165,7 +150,6 @@
             </form>
         </div>
     </div>
-
     <script th:inline="javascript">
         $(document).ready(function () {
             $("#like").click(function () {
@@ -189,24 +173,6 @@
                 });
             });
         });
-
-        // $(document).ready(function () { // document loading 후 실행할 함수
-        //
-        //
-        //    var sizeButton = document.getElementById("#dropdownMenuButton1");
-        //    var sizes = document.querySelectorAll(".dropdown-item");
-        //    for(var i=0; i<sizes.length; i++){
-        //         sizes[i].addEventListener("click", getSize);
-        //    }
-        //
-        //    function getSize(){
-        //        var size = this.getAttribute("text");
-        //        console.log("사이즈--------->",size);
-        //        // sizeButton.innerHTML = size;
-        //        sizeButton.setAttribute("text", size);
-        //    }
-        //
-        // });
 
         $(document).ready(function () { // document loading 후 실행할 함수
 
@@ -255,10 +221,6 @@
             $('#modal-review-content').val(content);
             $('#modal-review-id').val(id);
 
-            // document.getElementById("review-title").value = title;
-            // document.getElementById("review-content").value = content;
-            // document.getElementById("review-id").value = id;
-
             console.log(document.getElementById("modal-review-title").value);
             console.log(document.getElementById("modal-review-content").value);
             console.log(document.getElementById("modal-review-id").value);
@@ -268,7 +230,7 @@
 
         var sizeButton = document.getElementById("#dropdownMenuButton1");
 
-        function getSize(size){
+        function getSize(size) {
             // var size = this.getAttribute("text");
             console.log("사이즈--------->",size);
             // sizeButton.innerHTML = size;
@@ -277,5 +239,4 @@
 
     </script>
 </div>
-
 </html>

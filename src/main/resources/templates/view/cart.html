@@ -12,14 +12,10 @@
         <h2 id="pageLogo">Cart</h2>
         <small>Check your shopping cart.</small>
     </div>
-
     <p class="text-center" th:if="${'empty.cart' == error_message}">empty cart.</p>
-    <!--        <hr class = "col-12 my-4"/>-->
-
     <br/>
     <form th:if="${error_message == null}" th:action="@{/cart/list}" method="post" name="buyForm">
         <table id="cart_table" class="table table-bordered table-responsive-sm">
-
             <br/>
             <thead>
             <tr>
@@ -29,7 +25,6 @@
                 <th scope="col">price</th>
             </tr>
             </thead>
-
             <tbody>
             <tr th:each="orderItem:${cartList}">
                 <td class="text-center align-middle">
@@ -47,7 +42,6 @@
                 </td>
             </tr>
             </tbody>
-
             <tfoot>
             <td colspan="3" class="text-right">
                 ₩ <b><span th:text="${#numbers.formatInteger(totalPrice, 3, 'COMMA')}"></span></b>
@@ -56,7 +50,6 @@
                 <button class="btn btn-dark" onclick="forms['buyForm'].submit()">buy now</button>
             </td>
             </tfoot>
-
         </table>
     </form>
 </div>

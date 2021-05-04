@@ -15,34 +15,21 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cody {
-
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private long id;
 
     @ManyToOne
     private Member member;
 
     private long outerId;
-
     private long topId;
-
     private long bottomId;
-
     private long accId;
-
     private long shoesId;
-
     private String backgroundId;
-
     private long outerSize;
-
     private long topSize;
-
     private long bottomSize;
-
     private long shoesSize;
-
     private long accSize;
-
 }
