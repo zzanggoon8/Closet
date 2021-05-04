@@ -81,6 +81,9 @@ dependencies {
     testCompile("org.springframework.security:spring-security-test")
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
 
+    // oauth(구글 로그인 연동)
+    compile('org.springframework.boot:spring-boot-starter-oauth2-client')
+
     // h2
     compile('com.h2database:h2')
 

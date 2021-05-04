@@ -1,0 +1,16 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: strong-augury-307301
+            client-secret: 491929978030
+            scope: profile,email
+#          naver:
+#            client-id: tJnDoWnlch9tVLpV5vd7
+#            client-secret: 48PTBeodnZ
+#            redirect-uri: {baseUrl}/{action}/oauth2/code/{registrationId}
+#            authorization-grant-type: authorization_code
+#            scope: name,email,profile_image
+#            client-name: Naver
