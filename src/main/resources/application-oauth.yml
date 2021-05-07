@@ -4,9 +4,10 @@ spring:
       client:
         registration:
           google:
-            client-id: strong-augury-307301
-            client-secret: 491929978030
+            client-id: 491929978030-bcubi8usjo62rdm98ttf3oqf7sk010lu.apps.googleusercontent.com
+            client-secret: Sghq6pzYkG6vwHH5ueDYYYP-
             scope: profile,email
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
 #          naver:
 #            client-id: tJnDoWnlch9tVLpV5vd7
 #            client-secret: 48PTBeodnZ

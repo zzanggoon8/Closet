@@ -1,9 +1,6 @@
 package com.ssu.project.util;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ssu.project.domain.weather.Weather;
-import com.ssu.project.dto.callBack.CallBackRequestDto;
 import com.ssu.project.dto.social.Profile;
 import com.ssu.project.dto.social.Token;
 import org.json.simple.JSONObject;
@@ -28,14 +25,14 @@ public class SocialService {
         urlBuilder.append("&" + URLEncoder.encode("client_secret","UTF-8") + "=" + URLEncoder.encode("48PTBeodnZ", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("code","UTF-8") + "=" + URLEncoder.encode(code, "UTF-8")); /*요청자료형식(XML/JSON)Default: XML*/
         urlBuilder.append("&" + URLEncoder.encode("state","UTF-8") + "=" + URLEncoder.encode(state, "UTF-8")); /*하단 참고자료 참조*/
-
-
         System.out.println(urlBuilder.toString());
+
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
         System.out.println("Response code: " + conn.getResponseCode());
+
         BufferedReader rd;
 
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
@@ -107,9 +104,7 @@ public class SocialService {
         }
 
         JSONObject jsonObj = (JSONObject) obj;
-        //Top레벨 단계 _response 파싱
         JSONObject response_obj = (JSONObject)jsonObj.get("response");
-        //response의 nickname값 파싱
         String id = (String)response_obj.get("id");
         String email = (String)response_obj.get("email");
         System.out.println(id);
