@@ -5,16 +5,23 @@ import com.ssu.project.domain.member.Member;
 import com.ssu.project.domain.member.MemberRepository;
 import com.ssu.project.domain.social.Social;
 import com.ssu.project.domain.social.SocialRepository;
+import com.ssu.project.domain.social.google.GoogleSocial;
+import com.ssu.project.domain.social.google.GoogleSocialRepository;
 import com.ssu.project.dto.callBack.CallBackRequestDto;
 import com.ssu.project.dto.member.MemberSignUpRequestDto;
 import com.ssu.project.dto.social.Profile;
 import com.ssu.project.dto.social.Token;
+import com.ssu.project.dto.social.google.GoogleCallBackRequestDto;
+import com.ssu.project.dto.social.google.GoogleProfile;
+import com.ssu.project.dto.social.google.GoogleToken;
 import com.ssu.project.service.daily.CityNameService;
 import com.ssu.project.service.daily.DateService;
 import com.ssu.project.service.item.ItemService;
 import com.ssu.project.service.member.MemberService;
 import com.ssu.project.service.member.MemberSignUpService;
 import com.ssu.project.service.weather.WeatherService;
+
+import com.ssu.project.util.GoogleSocialService;
 import com.ssu.project.util.SocialService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +49,8 @@ public class MemberIndexController {
     private final MemberRepository memberRepository;
     private final SocialService socialService;
     private final SocialRepository socialRepository;
+    private final GoogleSocialService googleSocialService;
+    private final GoogleSocialRepository googleSocialRepository;
 
     @GetMapping("/")
     public String index(Model model, String city) {
@@ -120,14 +129,30 @@ public class MemberIndexController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        String redirectUri = URLEncoder.encode("http://localhost:8080/callback");
 
-        String naverUri = "https://nid.naver.com/oauth2.0/authorize?response_type=code" +
+        // 2. 네이버 아이디로 연동 결과 Callback 정보(redirect_uri=CALLBACK_URL(출력 포맷))
+        String redirectUri = URLEncoder.encode("http://localhost:8080/callback");
+        String googleRedirecUri = URLEncoder.encode("http://localhost:8080/googleCallback");
+
+        // 1. 네이버 아이디로 연동 URL 생성하기
+        String naverUri = "https://nid.naver.com/oauth2.0/authorize" +
+                "?response_type=code" +
                 "&client_id=tJnDoWnlch9tVLpV5vd7" +
-                "&state=fdhtffjygfkg" +
+                "&state=STATE_STRING" +
                 "&redirect_uri=" + redirectUri;
 
+        String googleUri = "https://accounts.google.com/o/oauth2/v2/auth" +
+                "?response_type=code" +
+                "&client_id=491929978030-bcubi8usjo62rdm98ttf3oqf7sk010lu.apps.googleusercontent.com" +
+                "&scope=openid%20email" +
+                "&redirect_uri=" + googleRedirecUri +
+                "&state=security_token%3D138r5719ru3e1%26url%3Dhttps%3A%2F%2Foauth2-login-demo.example.com%2FmyHome" +
+                "&login_hint=jsmith@example.com" +
+                "&nonce=0394852-3190485-2490358" +
+                "&hd=example.com";
+
         model.addAttribute("naverUri", naverUri);
+        model.addAttribute("googleUri", googleUri);
 
         return "/view/login";
     }
@@ -163,6 +188,42 @@ public class MemberIndexController {
             memberService.autologin(member);
         } else {
             Member member = memberRepository.findByEmail(profile.getEmail());
+            memberService.autologin(member);
+        }
+        return "/view/socialCallback";
+    }
+
+    @GetMapping("/googleCallback")
+        public String googleCallBack(GoogleCallBackRequestDto googleCallBackRequestDto) {
+            GoogleProfile googleProfile = null;
+            try {
+                GoogleToken googleToken = googleSocialService.getGoogleAccessToken(googleCallBackRequestDto.getCode());
+
+                googleProfile = googleSocialService.getGoogleUserProfile(googleToken);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(googleProfile);
+
+            GoogleSocial googleSocial = googleSocialRepository.findByGoogleSocialId(googleProfile.getId());
+        if (googleSocial == null) {
+            MemberSignUpRequestDto memberSignUpRequestDto = MemberSignUpRequestDto.builder()
+                    .email(googleProfile.getEmail())
+                    .password("dddd")
+                    .build();
+            Member member = memberService.createNewMember(memberSignUpRequestDto);
+
+            GoogleSocial newsocial = GoogleSocial.builder()
+                    .googleSocialId(googleProfile.getId())
+                    .member(member)
+                    .type("구글")
+                    .build();
+            googleSocialRepository.save(newsocial);
+            memberService.autologin(member);
+        } else {
+            Member member = memberRepository.findByEmail(googleProfile.getEmail());
             memberService.autologin(member);
         }
         return "/view/socialCallback";

@@ -49,29 +49,12 @@
                 <label class="form-check-label" for="rememberMe" aria-describedby="rememberMeHelp">Keep Login
                     Status</label>
             </div>
-            <hr class="col-12 my-4">
-            <button class="w-50 btn btn-dark btn-lg" type="submit">Login</button>
+            <button class="w-50 btn btn-secondary btn-lg" type="submit">Login</button>
             <!-- google -->
-            <div class="col-md-10">
-                <!-- th:if="${not #strings.isEmpty(userName)}" -->
-                <div>
-                    <img style="width:45px; height:45px" src="/image/unnamed.png"
-                         class="rounded-circle img-thumbnail img-responsive">
-                    <!-- th:text="${userName}" -->
-                    <span id="login-user">사용자</span> 님, 안녕하세요.
-                    <a href="/logout" class="btn btn-sm btn-info active" role="button">Logout</a>
-                </div>
-
-                <!--  th:if="${#strings.isEmpty(userName)}" -->
-                <div>
-                    <!-- 스프링 시큐리티에서 기본 제공하는 URL - 별도 컨트롤러 작성 필요 없음 -->
-                    <a href="/oauth2/authorization/google" class="btn btn-sm btn-success active" role="button">Google Login</a>
-                </div>
-                <div>
-                    <!-- 스프링 시큐리티에서 기본 제공하는 URL - 별도 컨트롤러 작성 필요 없음 -->
-                    <a th:href="${naverUri}" class="btn btn-sm btn-success active" id="naverLogin" role="button">Naver Login</a>
-                </div>
-            </div>
+<!--            <div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+                <a th:href="${googleUri}" class="w-50 btn btn-lg btn-primary my-2"  id="googleLogin" role="button">Google Login</a>
+            <!-- naver -->
+            <a th:href="${naverUri}" class="w-50 btn btn-lg btn-success my-1" id="naverLogin" role="button">Naver Login</a>
         </form>
     </div>
     <script>
@@ -81,7 +64,13 @@
             window.open(this.href, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
         }
     </script>
+    <script>
+        document.getElementById("googleLogin").onclick = function(e) {
+            e.preventDefault();
 
+            window.open(this.href, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
+        }
+    </script>
     <footer class="my-5 pt-5">
     </footer>
 </div>
