@@ -105,7 +105,4 @@ dependencies {
     compile("com.google.code.gson:gson")
     // json
     compile("com.googlecode.json-simple:json-simple:1.1.1")
-
-    // Error creating bean with name 'entityManagerFactory' 에러 해결
-
 }

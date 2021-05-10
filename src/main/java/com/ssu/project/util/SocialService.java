@@ -65,6 +65,7 @@ public class SocialService {
     public Profile getUserProfile(Token token) throws Exception {
         String api_url = "https://openapi.naver.com/v1/nid/me";
 
+
         StringBuilder urlBuilder = new StringBuilder(api_url);
         System.out.println(urlBuilder.toString());
         URL url = new URL(urlBuilder.toString());
