@@ -51,10 +51,11 @@
             </div>
             <button class="w-50 btn btn-secondary btn-lg" type="submit">Login</button>
             <!-- google -->
-<!--            <div class="g-signin2" data-onsuccess="onSignIn"></div>-->
-                <a th:href="${googleUri}" class="w-50 btn btn-lg btn-primary my-2"  id="googleLogin" role="button">Google Login</a>
+            <a th:href="${googleUri}" class="w-50 btn btn-lg btn-primary my-2"  id="googleLogin" role="button">Google Login</a>
             <!-- naver -->
             <a th:href="${naverUri}" class="w-50 btn btn-lg btn-success my-1" id="naverLogin" role="button">Naver Login</a>
+            <!-- kakao -->
+            <a th:href="${kakaoUri}" class="w-50 btn btn-lg btn-warning my-1" id="kakaoLogin" role="button">Kakao Login</a>
         </form>
     </div>
     <script>
@@ -63,9 +64,12 @@
 
             window.open(this.href, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
         }
-    </script>
-    <script>
         document.getElementById("googleLogin").onclick = function(e) {
+            e.preventDefault();
+
+            window.open(this.href, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
+        }
+        document.getElementById("kakaoLogin").onclick = function(e) {
             e.preventDefault();
 
             window.open(this.href, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");

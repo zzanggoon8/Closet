@@ -8,6 +8,8 @@ import com.ssu.project.domain.order.Orders;
 import com.ssu.project.domain.review.Review;
 //import com.ssu.project.domain.social.Social;
 import com.ssu.project.domain.social.Social;
+import com.ssu.project.domain.social.google.GoogleSocial;
+import com.ssu.project.domain.social.kakao.KakaoSocial;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -95,4 +97,10 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Social> socials = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<GoogleSocial> googleSocials = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<KakaoSocial> kakaoSocials = new ArrayList<>();
 }

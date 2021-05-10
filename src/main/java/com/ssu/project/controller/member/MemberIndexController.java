@@ -1,12 +1,13 @@
 package com.ssu.project.controller.member;
 
-import com.google.gson.JsonObject;
 import com.ssu.project.domain.member.Member;
 import com.ssu.project.domain.member.MemberRepository;
 import com.ssu.project.domain.social.Social;
 import com.ssu.project.domain.social.SocialRepository;
 import com.ssu.project.domain.social.google.GoogleSocial;
 import com.ssu.project.domain.social.google.GoogleSocialRepository;
+import com.ssu.project.domain.social.kakao.KakaoRepository;
+import com.ssu.project.domain.social.kakao.KakaoSocial;
 import com.ssu.project.dto.callBack.CallBackRequestDto;
 import com.ssu.project.dto.member.MemberSignUpRequestDto;
 import com.ssu.project.dto.social.Profile;
@@ -14,6 +15,9 @@ import com.ssu.project.dto.social.Token;
 import com.ssu.project.dto.social.google.GoogleCallBackRequestDto;
 import com.ssu.project.dto.social.google.GoogleProfile;
 import com.ssu.project.dto.social.google.GoogleToken;
+import com.ssu.project.dto.social.kakao.KakaoCallBackRequestDto;
+import com.ssu.project.dto.social.kakao.KakaoProfile;
+import com.ssu.project.dto.social.kakao.KakaoToken;
 import com.ssu.project.service.daily.CityNameService;
 import com.ssu.project.service.daily.DateService;
 import com.ssu.project.service.item.ItemService;
@@ -22,6 +26,7 @@ import com.ssu.project.service.member.MemberSignUpService;
 import com.ssu.project.service.weather.WeatherService;
 
 import com.ssu.project.util.GoogleSocialService;
+import com.ssu.project.util.KakaoSocialService;
 import com.ssu.project.util.SocialService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +56,8 @@ public class MemberIndexController {
     private final SocialRepository socialRepository;
     private final GoogleSocialService googleSocialService;
     private final GoogleSocialRepository googleSocialRepository;
+    private final KakaoSocialService kakaoSocialService;
+    private final KakaoRepository kakaoRepository;
 
     @GetMapping("/")
     public String index(Model model, String city) {
@@ -130,16 +137,15 @@ public class MemberIndexController {
     @GetMapping("/login")
     public String login(Model model) {
 
-        // 2. 네이버 아이디로 연동 결과 Callback 정보(redirect_uri=CALLBACK_URL(출력 포맷))
-        String redirectUri = URLEncoder.encode("http://localhost:8080/callback");
+        String naverRedirectUri = URLEncoder.encode("http://localhost:8080/callback");
         String googleRedirecUri = URLEncoder.encode("http://localhost:8080/googleCallback");
+        String kakaoRedirectUri = URLEncoder.encode("http://localhost:8080/kakaoCallback");
 
-        // 1. 네이버 아이디로 연동 URL 생성하기
         String naverUri = "https://nid.naver.com/oauth2.0/authorize" +
                 "?response_type=code" +
                 "&client_id=tJnDoWnlch9tVLpV5vd7" +
                 "&state=STATE_STRING" +
-                "&redirect_uri=" + redirectUri;
+                "&redirect_uri=" + naverRedirectUri;
 
         String googleUri = "https://accounts.google.com/o/oauth2/v2/auth" +
                 "?response_type=code" +
@@ -151,14 +157,19 @@ public class MemberIndexController {
                 "&nonce=0394852-3190485-2490358" +
                 "&hd=example.com";
 
+        String kakaoUri ="https://kauth.kakao.com/oauth/authorize" +
+                "?client_id=7db4066f7f7786e895ec8781c1cb2976" +
+                "&redirect_uri=" + kakaoRedirectUri+
+                "&response_type=code";
+
         model.addAttribute("naverUri", naverUri);
         model.addAttribute("googleUri", googleUri);
-
+        model.addAttribute("kakaoUri", kakaoUri);
         return "/view/login";
     }
 
     @GetMapping("/callback")
-    public String callback(Model model, CallBackRequestDto callBackRequestDto) {
+    public String callback(CallBackRequestDto callBackRequestDto) {
         Profile profile = null;
         try {
             Token token = socialService.getAccessToken(callBackRequestDto.getCode(), callBackRequestDto.getState());
@@ -224,6 +235,42 @@ public class MemberIndexController {
             memberService.autologin(member);
         } else {
             Member member = memberRepository.findByEmail(googleProfile.getEmail());
+            memberService.autologin(member);
+        }
+        return "/view/socialCallback";
+    }
+
+    @GetMapping("/kakaoCallback")
+    public String kakaoCallBack(KakaoCallBackRequestDto kakaoCallBackRequestDto) {
+        KakaoProfile kakaoProfile = null;
+        try {
+            KakaoToken kakaoToken = kakaoSocialService.getKakaoAccessToken(kakaoCallBackRequestDto.getCode());
+            kakaoProfile = kakaoSocialService.getKakaoUserProfile(kakaoToken);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(kakaoProfile);
+
+        KakaoSocial kakaoSocial = kakaoRepository.findByKakaoSocialId(kakaoProfile.getId());
+
+        if (kakaoSocial == null) {
+            MemberSignUpRequestDto memberSignUpRequestDto = MemberSignUpRequestDto.builder()
+                    .email(kakaoProfile.getEmail())
+                    .password("dddd")
+                    .build();
+            Member member = memberService.createNewMember(memberSignUpRequestDto);
+
+            KakaoSocial newsocial = KakaoSocial.builder()
+                    .kakaoSocialId(kakaoProfile.getId())
+                    .member(member)
+                    .type("카카오톡")
+                    .build();
+            kakaoRepository.save(newsocial);
+            memberService.autologin(member);
+        } else {
+            Member member = memberRepository.findByEmail(kakaoProfile.getEmail());
             memberService.autologin(member);
         }
         return "/view/socialCallback";
