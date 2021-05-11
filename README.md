@@ -1,4 +1,4 @@
-#Web Application Daily Closet
+>Web Application Daily Closet
 
 >프로젝트 주제
 
